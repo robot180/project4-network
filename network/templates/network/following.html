@@ -1,0 +1,79 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+
+<div id="allfollowedPosts" style="white-space: pre-line;">
+</div>
+
+
+{% if not followedposts %}
+  You have not followed any users.
+
+{% else %}
+
+
+  {% for post in followedposts %}
+  
+  <div class = 'post_div row justify-contents-between pointer-link p-2' data-postinfo="{{ post }}" id="post{{post.id}}">
+    <div class="col-6 col-sm-5 col-md-3 p-2 order-md-2 small text-right text-muted font-italic font-weight-lighter align-self-center">
+        Posted On: {{ post.timestamp }} by <a href="{% url 'profileurl' username_profile=post.author %}">{{ post.author }}</a>
+    </div>
+    <div  class="col-2 col-sm-1 col-md-1 p-2 order-md-2 text-right font-italic align-self-center">
+      <strong id="post{{post.id}}-likes">Likes: {{ post.liked_by.count }}</strong>
+    </div>
+    <div class="col px-2 pb-2 pt-md-2 order-md-1 text-truncate">
+      {{ post.title }}
+      <small><em>{{ post.body }}</em></small>
+    </div>
+    {% if user in post.liked_by.all %}
+        <button id="post{{post.id}}-like-unlike" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
+        data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Unlike</button>
+    {% else %}
+        <button id="post{{post.id}}-like-unlike" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
+        data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Like</button>
+    {% endif %}
+  </div>
+
+  {% endfor %}
+
+{% endif %}
+
+
+
+
+<div class = "container" id="pagenav">
+    <div class="row my-5">
+        <div class="col-md-4 offset-md-3">
+            <nav aria-label="...">
+                <ul class="pagination">
+                  
+                  {% if followedposts.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ followedposts.previous_page_number }}" tabindex="-1" aria-disabled="true">Previous</a>
+                  </li>
+                  {% endif %}
+
+                  <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">{{ followedposts.number }}<span class="sr-only"></span></a>
+                  </li>
+                  {% if followedposts.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ followedposts.next_page_number }}">Next</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'network/posts.js' %}"></script>
+
+{% endblock %}

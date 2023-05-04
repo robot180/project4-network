@@ -1,0 +1,94 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+{% if user.is_authenticated %}
+    
+    <a class="btn btn-info" href="{% url 'newPosturl' %}" role="button">New Post</a>
+
+{% endif %}
+
+<div id="allPosts" style="white-space: pre-line;">
+</div>
+TODO index.html
+<br>
+
+{% if not allposts %}
+  There are no posts.
+
+{% else %}
+
+
+  {% for post in allposts %}
+  
+  <div class = 'post_div row justify-contents-between pointer-link p-2' data-postinfo="{{ post }}" id="post{{post.id}}">
+    <div class="col-6 col-sm-5 col-md-3 p-2 order-md-2 small text-right text-muted font-italic font-weight-lighter align-self-center">
+        Posted On: {{ post.timestamp }} by <a href="{% url 'profileurl' username_profile=post.author %}">{{ post.author }}</a>
+    </div>
+    <div  class="col-2 col-sm-1 col-md-1 p-2 order-md-2 text-right font-italic align-self-center">
+      <strong id="post{{post.id}}-likes">Likes: {{ post.liked_by.count }}</strong>
+    </div>
+    <div class="col px-2 pb-2 pt-md-2 order-md-1 text-truncate">
+      {{ post.title }}
+      <small><em>{{ post.body }}</em></small>
+    </div>
+    {% if user.is_authenticated %}
+      {% if user == post.author %}
+      <button id="post{{post.id}}editpost" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center"
+      data-postauthor="{{ post.author }}" data-editpostbody="{{ post.body }}" data-editpost-id="{{ post.id }}" onclick="editpost(this.dataset)">Edit Post</button>
+      {% else %}
+        {% if user in post.liked_by.all %}
+        <button id="post{{post.id}}-like-unlike" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
+        data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Unlike</button>
+        {% else %}
+        <button id="post{{post.id}}-like-unlike" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
+        data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Like</button>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  </div>
+
+  {% endfor %}
+
+{% endif %}
+
+{{ allposts }}
+
+
+
+<div class = "container" id="pagenav">
+    <div class="row my-5">
+        <div class="col-md-4 offset-md-3">
+            <p>{{ allposts.number }}/</p>
+            <nav aria-label="...">
+                <ul class="pagination">
+                  
+                  {% if allposts.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ allposts.previous_page_number }}" tabindex="-1" aria-disabled="true">Previous</a>
+                  </li>
+                  {% endif %}
+
+                  <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">{{ allposts.number }}<span class="sr-only"></span></a>
+                  </li>
+                  {% if allposts.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ allposts.next_page_number }}">Next</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'network/posts.js' %}"></script>
+
+{% endblock %}
