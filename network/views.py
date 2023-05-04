@@ -246,7 +246,7 @@ def following(request):
     # for element in following:
     #     print(type(element))
     followedposts = Post.objects.order_by("-timestamp").filter(author__in=following).all()
-    # print(followedposts)
+    print(followedposts)
     page = Paginator(followedposts,10)
     page_number= request.GET.get('page')
     # print(f'page list: {page_list}')
