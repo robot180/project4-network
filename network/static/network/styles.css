@@ -4,3 +4,18 @@
     padding: 12px;
     margin: 10px;
 }
+
+
+.post_div2 {
+    border-style:solid;
+    border-color:blueviolet;
+    padding: 12px;
+    margin: 10px;
+}
+
+.post_div3 {
+    border-style:solid;
+    border-color:brown;
+    padding: 12px;
+    margin: 10px;
+}
