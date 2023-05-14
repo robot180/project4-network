@@ -32,11 +32,23 @@ html body {
     cursor: pointer;
 }
 
+.user-link {
+  color: #96a5bc;   
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+
+
 .blue-button {
     background-color: #b5c3da;
     transition: color .15s ease-in-out, background-color .15s ease-in-out,border-color .15s ease-in-out;
 }
 
+.green-button {
+    background-color: #cbdab5;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
 .pagination-green-inactive {
     color: #85A68E;
 }

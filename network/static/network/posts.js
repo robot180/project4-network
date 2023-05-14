@@ -159,6 +159,7 @@ function editpost(content) {
   document.querySelector(`#post${content.editpostId}`).appendChild(editbox)
   const submit_button = document.createElement("button");
   submit_button.setAttribute("id", "submit_button");
+  submit_button.className = "btn green-button"
   submit_button.innerHTML = "Submit Edits";
   // submit_button.addEventListener("click", submit_edits())
   document.querySelector(`#post${content.editpostId}`).appendChild(submit_button);
@@ -209,7 +210,7 @@ async function submit_edits(content, editedpost, link) {
     //or recreate the "edit post" button using createElement
     const editbutton = document.createElement('button');
     editbutton.setAttribute("id", `post${result[0].pk}editpost`);
-    editbutton.classList = "col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center";
+    editbutton.classList = "btn green-button col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center";
     editbutton.innerHTML = "Edit Post";
     editbutton.dataset.editpostbody = updated_post.body;
     editbutton.dataset.editpostId = content.editpostId;

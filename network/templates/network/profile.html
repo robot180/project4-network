@@ -1,6 +1,6 @@
 {% extends "network/layout.html" %}
 {% load static %}
-
+{% load humanize %}
 
 {% block title %}{{ selected_user }}'s Profile page{% endblock %}
 
@@ -10,61 +10,68 @@
 {% block body %}
 <!-- User's Information -->
 <div class="container-xl">
-  <div class="debug row justify-content-center">
-    <div class="debugcol-12 col-lg-8 border m-4 p-4 bg-white text-center box-shadow">
+  <div class=" row justify-content-center ">
+    <div class="col-12 col-lg-8 border m-4 p-4 bg-white text-center box-shadow">
       <h1>{{ selected_user }}</h1>
+          <!-- display # of followers and # of users this user follows -->
+            <div id="followers" class="m-2 p-2"><strong>Followers: {{ selected_user.followers.count }}</strong></div> 
+            <div class="m-2 p-2"><strong>Following: {{ following|length }}</strong></div> 
+          <!-- END display # of followers and # of users this user follows -->
+
+          <!-- follow button -->
+            {% if user != selected_user %}
+                {% if user.is_authenticated %}
+                <div id="follow-button-div">
+                  {% if user not in selected_user.followers.all %}    
+                    <button id="follow-button" class="btn blue-button" data-selected_user="{{ selected_user }}" onclick="follow(this.dataset)">Follow</button>
+                  {% else %}
+                    <button id="follow-button" class="btn blue-button" data-selected_user="{{ selected_user }}" onclick="follow(this.dataset)">Unfollow</button>
+                  {% endif %}
+                </div>
+                {% endif %}
+            {% endif %}
+          <!-- follow button end -->
+              </div>
+            </div>
+          </div>
+<!-- User's Information -->
+
+<!-- User's posts -->
+<div class="container-lg justify-content-center">
+  <div class=" row justify-content-center debug">
+      <div class=" justify-content-center col-12 col-lg-8 m-4 p-4 bg-white box-shadow">
+        {% for post in userzPosts %}
+        <div class = 'post_div row justify-contents-between pointer-link p-2 border' data-postinfo="{{ post }}" id="post{{post.id}}">
+          <div class="col-6 col-sm-5 col-md-3 p-2 order-md-2 small text-right text-muted font-italic font-weight-lighter align-self-center">
+              Posted On: {{ post.timestamp|naturaltime }} by <a href="{% url 'profileurl' username_profile=post.author %}">{{ post.author }}</a>
+          </div>
+          <div  class="col-2 col-sm-1 col-md-1 p-2 order-md-2 text-right font-italic align-self-center">
+            <strong id="post{{post.id}}-likes">Likes: {{ post.liked_by.count }}</strong>
+          </div>
+          <div id="postBody_{{post.id}}" class="col px-2 pb-2 pt-md-2 order-md-1 text-truncate">
+            {{ post.title }}
+            <small><em>{{ post.body }}</em></small>
+          </div>
+          {% if user.is_authenticated %}
+            {% if user == post.author %}
+            <button id="post{{post.id}}editpost" class="btn green-button col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" 
+            data-postauthor="{{ post.author }}" data-editpostbody="{{ post.body }}" data-editpost-id="{{ post.id }}" onclick="editpost(this.dataset)">Edit Post</button>
+            {% else %}
+              {% if user in post.liked_by.all %}
+              <button id="post{{post.id}}-like-unlike" class="btn blue-button col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
+              data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Unlike</button>
+              {% else %}
+              <button id="post{{post.id}}-like-unlike" class="btn blue-button col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
+              data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Like</button>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        </div>
+        {% endfor %}
     </div>
   </div>
 </div>
-   {% for post in userzPosts %}
 
-
-   <div class = 'post_div row justify-contents-between pointer-link p-2' data-postinfo="{{ post }}" id="post{{post.id}}">
-     <div class="col-6 col-sm-5 col-md-3 p-2 order-md-2 small text-right text-muted font-italic font-weight-lighter align-self-center">
-         Posted On: {{ post.timestamp }} by <a href="{% url 'profileurl' username_profile=post.author %}">{{ post.author }}</a>
-     </div>
-     <div  class="col-2 col-sm-1 col-md-1 p-2 order-md-2 text-right font-italic align-self-center">
-       <strong id="post{{post.id}}-likes">Likes: {{ post.liked_by.count }}</strong>
-     </div>
-     <div class="col px-2 pb-2 pt-md-2 order-md-1 text-truncate">
-       {{ post.title }}
-       <small><em>{{ post.body }}</em></small>
-     </div>
-     {% if user.is_authenticated %}
-       {% if user == post.author %}
-       <button id="post{{post.id}}editpost" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" 
-       data-postauthor="{{ post.author }}" data-editpostbody="{{ post.body }}" data-editpost-id="{{ post.id }}" onclick="editpost(this.dataset)">Edit Post</button>
-       {% else %}
-         {% if user in post.liked_by.all %}
-         <button id="post{{post.id}}-like-unlike" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
-         data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Unlike</button>
-         {% else %}
-         <button id="post{{post.id}}-like-unlike" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-likedpost-id="{{ post.id }}" data-post-likedby="{{ post.liked_by.all }}" data-user="{{ user }}" 
-         data-likes="{{ post.liked_by.count }}" onclick="likepost(this.dataset)">Like</button>
-         {% endif %}
-       {% endif %}
-     {% endif %}
-   </div>
-   {% endfor %}
-
-<!-- display # of followers and # of users this user follows -->
-   <div id="followers" class="m-2 p-2">Followers: {{ selected_user.followers.count }}</div> 
-   <div class="m-2 p-2">Following: {{ following|length }}</div> 
-<!-- END display # of followers and # of users this user follows -->
-
-<!-- follow button -->
-  {% if user != selected_user %}
-      {% if user.is_authenticated %}
-      <div id="follow-button-div">
-        {% if user not in selected_user.followers.all %}    
-          <button id="follow-button" class="col-2 col-sm-1 m-2 p-2 order-md-2 text-center align-self-center" data-selected_user="{{ selected_user }}" onclick="follow(this.dataset)">Follow</button>
-        {% else %}
-          <button id="follow-button" class="col-2 col-sm-1 m-2 p-2 order-md-2 text-center align-self-center" data-selected_user="{{ selected_user }}" onclick="follow(this.dataset)">Unfollow</button>
-        {% endif %}
-      </div>
-      {% endif %}
-  {% endif %}
-<!-- follow button end -->
 
 {% endblock %}
 
