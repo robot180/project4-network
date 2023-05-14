@@ -119,7 +119,7 @@ def newPost(request):
             form.save()
             return HttpResponseRedirect(reverse("index"))
         else:
-            messages.warning(request, "Please write something.")
+            messages.warning(request, "Please write something. Character limit is 450")
             print("form invalid")
             return render(request, "network/newpost.html", {
                 "form": form,
@@ -151,6 +151,8 @@ def submit_changes(request, postid):
             if post.author == request.user:
                 #update the body of the queried post and save it in the database
                 post.body = data["editedpost"]
+                if len(post.body) > 450:
+                    return JsonResponse({"error": "Post is limited to 450 characters."}, status=404)
                 post.save()
                 print("saved")
                 # the post is the same, but had to use filter because the JsonReponse can't accept a single model

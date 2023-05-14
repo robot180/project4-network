@@ -159,6 +159,7 @@ function editpost(content) {
   document.querySelector(`#post${content.editpostId}`).appendChild(editbox)
   const submit_button = document.createElement("button");
   submit_button.setAttribute("id", "submit_button");
+  submit_button.className = "btn green-button"
   submit_button.innerHTML = "Submit Edits";
   // submit_button.addEventListener("click", submit_edits())
   document.querySelector(`#post${content.editpostId}`).appendChild(submit_button);
@@ -179,7 +180,12 @@ async function submit_edits(content, editedpost, link) {
   })
   
 })
-.then(response => response.json())
+.then(function(response) {
+//handle if fetch returns a 404 status https://stackoverflow.com/questions/39297345/fetch-resolves-even-if-404
+  if(!response.ok) {
+    alert("Post character limit is 450");
+    throw new Error("404 resposne received");
+} else {response.json()
 .then(result => {
     // Print result
     //results look slightly different than the load_mailbox function in project3
@@ -204,7 +210,7 @@ async function submit_edits(content, editedpost, link) {
     //or recreate the "edit post" button using createElement
     const editbutton = document.createElement('button');
     editbutton.setAttribute("id", `post${result[0].pk}editpost`);
-    editbutton.classList = "col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center";
+    editbutton.classList = "btn green-button col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center";
     editbutton.innerHTML = "Edit Post";
     editbutton.dataset.editpostbody = updated_post.body;
     editbutton.dataset.editpostId = content.editpostId;
@@ -215,7 +221,7 @@ async function submit_edits(content, editedpost, link) {
     
     // <button id="#editpost" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-editpostbody="{{ updated_post.body }}" onclick="editpost(this.dataset)">Edit Post</button>
 
-});  
+});  }})
   return false;
 
 }; 
