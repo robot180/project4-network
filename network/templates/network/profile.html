@@ -6,10 +6,19 @@
 
 
 
-{% block body %}
 
+{% block body %}
+<!-- User's Information -->
+<div class="container-xl">
+  <div class="debug row justify-content-center">
+    <div class="debugcol-12 col-lg-8 border m-4 p-4 bg-white text-center box-shadow">
+      <h1>{{ selected_user }}</h1>
+    </div>
+  </div>
+</div>
    {% for post in userzPosts %}
-  
+
+
    <div class = 'post_div row justify-contents-between pointer-link p-2' data-postinfo="{{ post }}" id="post{{post.id}}">
      <div class="col-6 col-sm-5 col-md-3 p-2 order-md-2 small text-right text-muted font-italic font-weight-lighter align-self-center">
          Posted On: {{ post.timestamp }} by <a href="{% url 'profileurl' username_profile=post.author %}">{{ post.author }}</a>

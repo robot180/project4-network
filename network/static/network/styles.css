@@ -32,8 +32,8 @@ html body {
     cursor: pointer;
 }
 
-.green-button {
-    background-color: #85A68E;
+.blue-button {
+    background-color: #b5c3da;
     transition: color .15s ease-in-out, background-color .15s ease-in-out,border-color .15s ease-in-out;
 }
 

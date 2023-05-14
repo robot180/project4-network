@@ -179,7 +179,12 @@ async function submit_edits(content, editedpost, link) {
   })
   
 })
-.then(response => response.json())
+.then(function(response) {
+//handle if fetch returns a 404 status https://stackoverflow.com/questions/39297345/fetch-resolves-even-if-404
+  if(!response.ok) {
+    alert("Post character limit is 450");
+    throw new Error("404 resposne received");
+} else {response.json()
 .then(result => {
     // Print result
     //results look slightly different than the load_mailbox function in project3
@@ -215,7 +220,7 @@ async function submit_edits(content, editedpost, link) {
     
     // <button id="#editpost" class="col-2 col-sm-1 col-md-2 p-2 order-md-2 text-center align-self-center" data-editpostbody="{{ updated_post.body }}" onclick="editpost(this.dataset)">Edit Post</button>
 
-});  
+});  }})
   return false;
 
 }; 
