@@ -201,7 +201,7 @@ def profile(request, username_profile):
     # print(following)
     # print(len(following))
     return render(request, "network/profile.html", {
-        "userzPosts":userz_posts,
+        "allposts":userz_posts,
         "selected_user":selected_user,
         "following" : following
     })
@@ -254,6 +254,6 @@ def following(request):
     # print(f'page list: {page_list}')
     followedposts = page.get_page(page_number)
     return render(request, "network/following.html", {
-    "followedposts": followedposts
+    "allposts": followedposts
 
     })
