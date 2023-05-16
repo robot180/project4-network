@@ -155,21 +155,31 @@ function editpost(content) {
   document.getElementById(`post${content.editpostId}editpost`).style.display = "none";
   editbox.setAttribute("id", `editbox_${content.editpostId}`)
   editbox.classList="post_div row justify-contents-between pointer-link p-2 form-control"
-  const t = document.createTextNode(`${content.editpostbody}`)
-  editbox.appendChild(t);
+  // const text = document.createTextNode(`${content.editpostbody}`) cannot be used 
+  // because the textarea will ALWAYS be pre-filled with content.editpostbody (the body that was initially loaded when we landed on the page)
+  // recall - even though the db is updated, until we reload page. the content var contains the informations we initially loaded
+  let text = document.getElementById(`postBody_${content.editpostId}`).innerText
+  text = document.createTextNode(text);
+  editbox.appendChild(text);
   //clear all the content of postdiv and insert the textarea box so that user can edit the post
   // document.getElementById(`post${content.editpostId}`).innerHTML = ""
   document.querySelector(`#post${content.editpostId}`).appendChild(editbox)
   const submit_button = document.createElement("button");
   submit_button.setAttribute("id", `submit_button_${content.editpostId}`);
-  submit_button.className = "btn green-button"
-  submit_button.innerHTML = "Submit Edits";
+  submit_button.className = "btn green-button m-2"
+  submit_button.innerText = "Submit Edits";
   // submit_button.addEventListener("click", submit_edits())
   document.querySelector(`#post${content.editpostId}`).appendChild(submit_button);
+  const cancel_button = document.createElement("button");
+  cancel_button.setAttribute("id", `cancel_button_${content.editpostId}`);
+  cancel_button.className = "btn blue-button"
+  cancel_button.innerText = "Cancel";
+  document.querySelector(`#post${content.editpostId}`).appendChild(cancel_button);
    //access the submit_edits function when clicked
   // link = `"{% url 'profileurl' username_profile=${content.editpostId} %}"`
   // submit_button.addEventListener("click", () => {submit_edits(content, editbox.value, link)}) 
   submit_button.addEventListener("click", () => {submit_edits(content, editbox.value)}) 
+  cancel_button.addEventListener("click", () => {cancel_edits(content)}) 
 };
 
 
@@ -206,6 +216,7 @@ async function submit_edits(content, editedpost) {
     updated_postdiv = document.getElementById(`post${result[0].pk}`)
     document.getElementById(`editbox_${result[0].pk}`).remove();
     document.getElementById(`submit_button_${result[0].pk}`).remove();
+    document.getElementById(`cancel_button_${content.editpostId}`).remove();
     document.getElementById(`postBody_${content.editpostId}`).style.display = "block";
     document.getElementById(`postBody_${content.editpostId}`).innerText = `${updated_post.body}`
     // updated_postdiv.innerHTML = `
@@ -264,4 +275,15 @@ async function follow(data) {
   follow_button.innerHTML == "Follow" ? follow_button.innerHTML = "Unfollow" : follow_button.innerHTML = "Follow";
   };
  
+
+  async function cancel_edits(content) {
+    console.log(content)
+    document.getElementById(`editbox_${content.editpostId}`).remove();
+    document.getElementById(`submit_button_${content.editpostId}`).remove();
+    document.getElementById(`cancel_button_${content.editpostId}`).remove();
+    document.getElementById(`postBody_${content.editpostId}`).style.display = "block";
+    document.getElementById(`post${content.editpostId}editpost`).style.display = "block";
+
+
+  }
   

@@ -6,15 +6,16 @@
 {% block body %}
 
 {% if user.is_authenticated %}
-    
-    <a class="btn btn-info" href="{% url 'newPosturl' %}" role="button">New Post</a>
-
+<div class=" d-flex justify-content-center container-lg">
+  <div class=" justify-content-center col-12 col-md-8 mt-4 pt-4 bg-white box-shadow">
+    <div class = 'd-flex justify-content-center border box-shadow-posts p-3 mb-4 mx-0 mx-md-3'>  
+      <a class=" btn green-button" href="{% url 'newPosturl' %}" role="button"><strong>Say Something!</strong></a>
+      
+    </div>
+  </div>
+</div>
 {% endif %}
 
-<div id="allPosts" style="white-space: pre-line;">
-</div>
-TODO index.html
-<br>
 
 <!-- <div class="container-lg">
   <div class=" row justify-content-center">
