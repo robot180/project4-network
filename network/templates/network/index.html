@@ -1,22 +1,24 @@
 {% extends "network/layout.html" %}
 {% load static %}
+{% load humanize %}
 
 
 {% block body %}
 
 {% if user.is_authenticated %}
-    
-    <a class="btn btn-info" href="{% url 'newPosturl' %}" role="button">New Post</a>
-
+<div class=" d-flex justify-content-center container-lg">
+  <div class=" justify-content-center col-12 col-md-8 mt-4 pt-4 bg-white box-shadow">
+    <div class = 'd-flex justify-content-center border box-shadow-posts p-3 mb-4 mx-0 mx-md-3'>  
+      <a class=" btn green-button" href="{% url 'newPosturl' %}" role="button"><strong>Say Something!</strong></a>
+      
+    </div>
+  </div>
+</div>
 {% endif %}
 
-<div id="allPosts" style="white-space: pre-line;">
-</div>
-TODO index.html
-<br>
 
-<div class="container-lg debug">
-  <div class=" row justify-content-center debug">
+<!-- <div class="container-lg">
+  <div class=" row justify-content-center">
       <div class=" justify-content-center col-12 col-lg-8 m-4 p-4 bg-white box-shadow">
 
 {% if not allposts %}
@@ -28,17 +30,17 @@ TODO index.html
   {% for post in allposts %}
   
         <div class = 'border box-shadow-posts p-3 mb-4 mx-0 mx-md-3' data-postinfo="{{ post }}" id="post{{post.id}}">
-          <div class="debug row px-3">
-            <div class="debug mr-auto col-sm-8  p-2 order-md-2 small text-left text-muted font-italic font-weight-lighter align-self-center">
-                Posted On: {{ post.timestamp }} by <a href="{% url 'profileurl' username_profile=post.author %}" class="user-link">{{ post.author }}</a>
+          <div class=" row px-3">
+            <div class=" mr-auto col-sm-8  p-2 order-md-2 small text-left text-muted font-italic font-weight-lighter align-self-center">
+                Posted {{ post.timestamp|naturaltime }} by <a href="{% url 'profileurl' username_profile=post.author %}" class="user-link">{{ post.author }}</a>
             </div>
-            <div  class="debug col-3 col-sm-4 col-md-2 p-2 order-md-2 text-right font-italic">
+            <div  class=" col-3 col-sm-4 col-md-2 p-2 order-md-2 text-right font-italic">
               <strong id="post{{post.id}}-likes">Likes: {{ post.liked_by.count }}</strong>
             </div>
           </div>
           <div class="mb-2 col px-2 pb-2 pt-md-2 order-md-1 text-break"> 
-            {{ post.title }}
-            <small><em>{{ post.body }}</em></small>
+            <strong><em><p>{{ post.title }}</p></strong></em>
+            <p id="postBody_{{post.id}}">{{ post.body }}</p>
           </div>
           {% if user.is_authenticated %}
             {% if user == post.author %}
@@ -88,7 +90,10 @@ TODO index.html
               </nav>
         </div>
     </div>
-</div>
+</div> -->
+
+
+{% include "network/post_block.html" %}
 
 {% endblock %}
 
